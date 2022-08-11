@@ -109,5 +109,43 @@ namespace WarModeAPI.Services
             }
         }
 
+        public async Task<CriaturaBoosted> GetCriaturaBoosted()
+        {
+            using (HttpClient httpClient = _httpClientFactory.CreateClient("TibiaData"))
+            {
+                string url = $"{(httpClient.BaseAddress.AbsolutePath == "/" ? string.Empty : httpClient.BaseAddress.AbsolutePath + "/")}" +
+                    $"{_tibiaDataConfig.Versao}/creatures";
+
+                HttpResponseMessage httpResponseMessage = await httpClient.GetAsync(url);
+                string responseString = await httpResponseMessage.Content.ReadAsStringAsync();
+
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    CriaturaBoostedApiResponse criaturaBoostedApiResponse = JsonConvert.DeserializeObject<CriaturaBoostedApiResponse>(responseString);
+
+
+                    if (criaturaBoostedApiResponse != null)
+                    {
+                        return new CriaturaBoosted
+                        {
+                            Name = criaturaBoostedApiResponse.Creatures.Boosted.Name,
+                            Image_url = criaturaBoostedApiResponse.Creatures.Boosted.Image_url,
+                            Featured = criaturaBoostedApiResponse.Creatures.Boosted.Featured
+                        };
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
+                }
+                else
+                {
+                    throw new Exception("Erro ao buscar o boss boostado.");
+                }
+            }
+        }
+
+
     }
 }

@@ -52,6 +52,21 @@ namespace WarModeAPI.Controllers
             }
         }
 
+        [HttpGet("GetCriaturaBoosted")]
+        public async Task<ActionResult> GetCriaturaBoosted()
+        {
+            try
+            {
+                CriaturaBoosted criaturaBoosted = await _warModeService.GetCriaturaBoosted();
+
+                return Ok(criaturaBoosted);
+            }
+            catch (Exception _error)
+            {
+                throw new Exception(_error.Message);
+            }
+        }
+
 
     }
 }
