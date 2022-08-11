@@ -9,5 +9,7 @@ namespace WarModeAPI.Services.Interface
     public interface IWarModeService
     {
         Task<Personagem> GetPersonagem(string nome);
+        Task<BossBoosted> GetBossBoosted();
+        Task<CriaturaBoosted> GetCriaturaBoosted();
     }
 }

@@ -67,6 +67,44 @@ namespace WarModeAPI.Services
                     throw new Exception("Erro ao buscar personagem.");
                 }
 
+            }
+        }
+
+        public async Task<BossBoosted> GetBossBoosted()
+        {
+            using (HttpClient httpClient = _httpClientFactory.CreateClient("TibiaData"))
+            {
+                string url = $"{(httpClient.BaseAddress.AbsolutePath == "/" ? string.Empty : httpClient.BaseAddress.AbsolutePath + "/")}" +
+                    $"{_tibiaDataConfig.Versao}/boostablebosses";
+
+                HttpResponseMessage httpResponseMessage = await httpClient.GetAsync(url);
+                string responseString = await httpResponseMessage.Content.ReadAsStringAsync();
+
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    BossBoostedApiResponse bossBoostedApiResponse = JsonConvert.DeserializeObject<BossBoostedApiResponse>(responseString);
+
+
+                    if (bossBoostedApiResponse != null)
+                    {
+                        return new BossBoosted
+                        {
+                            Name = bossBoostedApiResponse.Boostable_bosses.Boosted.Name,
+                            Image_url = bossBoostedApiResponse.Boostable_bosses.Boosted.Image_url,
+                            Featured = bossBoostedApiResponse.Boostable_bosses.Boosted.Featured
+                        };
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
+                }
+                else
+                {
+                    throw new Exception("Erro ao buscar o boss boostado.");
+                }
+
 
             }
         }

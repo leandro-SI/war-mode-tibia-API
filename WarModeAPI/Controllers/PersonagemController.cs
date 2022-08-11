@@ -37,6 +37,21 @@ namespace WarModeAPI.Controllers
             }
         }
 
+        [HttpGet("GetBossBoosted")]
+        public async Task<ActionResult> GetBossBoosted()
+        {
+            try
+            {
+                BossBoosted bossBoosted = await _warModeService.GetBossBoosted();
+
+                return Ok(bossBoosted);
+            }
+            catch (Exception _error)
+            {
+                throw new Exception(_error.Message);
+            }
+        }
+
 
     }
 }
