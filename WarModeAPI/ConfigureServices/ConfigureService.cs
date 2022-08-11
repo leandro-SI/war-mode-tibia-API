@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WarModeAPI.Services;
+using WarModeAPI.Services.Interface;
 using WarModeAPI.WarModeConfig;
 
 namespace WarModeAPI.ConfigureServices
@@ -12,18 +14,19 @@ namespace WarModeAPI.ConfigureServices
     {
         public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            APIConfig apiConfig = new APIConfig();
+            TibiaDataConfig tibiaDataConfig = new TibiaDataConfig();
 
             configuration
-                .GetSection("APIConfig")
-                .Bind(apiConfig);
+                .GetSection("TibiaDataConfig")
+                .Bind(tibiaDataConfig);
 
-            services.AddHttpClient("WarMode", options =>
+            services.AddHttpClient("TibiaData", options =>
             {
-                options.BaseAddress = new Uri(apiConfig.Url);
+                options.BaseAddress = new Uri(tibiaDataConfig.Url);
             });
 
-            services.Configure<APIConfig>(configuration.GetSection("APIConfig"));
+            services.Configure<TibiaDataConfig>(configuration.GetSection("TibiaDataConfig"));
+            //services.AddTransient<IWarModeService, WarModeService>();
 
         }
     }
